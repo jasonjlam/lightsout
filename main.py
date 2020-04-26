@@ -40,3 +40,4 @@ ident(t)
 csystems = [ t ]
 
 parse_file('script', edges, polygons, csystems, screen, zbuffer, color, view, ambient, light, areflect, dreflect, sreflect)
+# parse_stl_ascii('panther.stl', polygons, csystems, screen, zbuffer, color, view, ambient, light, areflect, dreflect, sreflect)

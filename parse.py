@@ -61,6 +61,48 @@ See the file script for an example of the file format
 """
 ARG_COMMANDS = [ 'box', 'sphere', 'torus', 'circle', 'bezier', 'hermite', 'line', 'scale', 'move', 'rotate', 'save' ]
 
+def parse_stl_ascii( fname, polygons, csystems, screen, zbuffer, color, view, ambient, light, areflect, dreflect, sreflect):
+    f = open(fname)
+    lines = f.readlines()
+    clear_screen(screen)
+    clear_zbuffer(zbuffer)
+    step = 100
+    step_3d = 20
+
+    c = 0
+    while c < len(lines):
+        line = lines[c].strip()
+        if line == "outer loop":
+            c+=1
+            arg0 = lines[c].strip().split(' ')
+            c+=1
+            arg1 = lines[c].strip().split(' ')
+            c+=1
+            arg2 = lines[c].strip().split(' ')
+            add_polygon(polygons, float(arg0[1]), float(arg0[2]), float(arg0[3]),
+                        float(arg1[1]), float(arg1[2]), float(arg1[3]), float(arg2[1]), float(arg2[2]), float(arg2[3]))
+        c+=1
+    t = make_scale(4, 4, 4)
+    matrix_mult(csystems[-1], t)
+    csystems[-1] = [x[:] for x in t]
+
+    t = make_rotX(-90)
+    matrix_mult(csystems[-1], t)
+    csystems[-1] = [x[:] for x in t]
+
+    t = make_rotZ(-80)
+    matrix_mult(csystems[-1], t)
+    csystems[-1] = [x[:] for x in t]
+
+    t = make_translate(-70, -50, 0)
+    matrix_mult(csystems[-1], t)
+    csystems[-1] = [x[:] for x in t]
+
+    matrix_mult(csystems[-1], polygons)
+    draw_polygons(polygons, screen, zbuffer, view, ambient, light, areflect, dreflect, sreflect)
+    display(screen)
+
+
 def parse_file( fname, edges, polygons, csystems, screen, zbuffer, color,view, ambient, light, areflect, dreflect, sreflect):
 
     f = open(fname)
